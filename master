@@ -1,0 +1,227 @@
+/**
+ *
+ * @author manuelcruz
+ */
+
+/** USUARIO LOGIN
+ * Usuario administrador: clinica
+ * Contrase˜na: 123
+ */
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class EvidenciaFinal1{
+
+    static ArrayList<String>listaDoctores=new ArrayList<>();
+    static ArrayList<String>listaPacientes=new ArrayList<>();
+    static ArrayList<String>listaCitas=new ArrayList<>();
+
+    static final String CARPETA_DB="db";
+    static final String ARCHIVO_DOCTORES="db/doctores.csv";
+    static final String ARCHIVO_PACIENTES="db/pacientes.csv";
+    static final String ARCHIVO_CITAS="db/citas.csv";
+
+    public static void intentarCargarArchivos(){
+        try {File carpeta=new File(CARPETA_DB);
+            if(!carpeta.exists()){
+                System.out.println("Carpeta 'db' no existe.Carpeta creada.");
+                carpeta.mkdir();}
+            File fDoctores=new File(ARCHIVO_DOCTORES);
+            if(!fDoctores.exists()){
+                System.out.println("Archivo doctores.csv no encontrado. Archivo generado.");
+                fDoctores.createNewFile();
+            }else{
+                BufferedReader br=new BufferedReader(new FileReader(fDoctores));
+                String linea;
+                while ((linea=br.readLine())!=null){
+                    listaDoctores.add(linea);}
+                br.close();}
+
+            File fPacientes=new File(ARCHIVO_PACIENTES);
+            if(!fPacientes.exists()){
+                System.out.println("Archivo pacientes.csv no encontrado. Archivo generado.");
+                fPacientes.createNewFile();
+            }else{
+                BufferedReader br=new BufferedReader(new FileReader(fPacientes));
+                String linea;
+                while ((linea=br.readLine())!=null){
+                    listaPacientes.add(linea);}
+                br.close();}
+
+            File fCitas=new File(ARCHIVO_CITAS);
+            if(!fCitas.exists()){
+                System.out.println("Archivo citas.csv no encontrado. Archivo generado.");
+                fCitas.createNewFile();
+            }else{
+                BufferedReader br=new BufferedReader(new FileReader(fCitas));
+                String linea;
+                while ((linea=br.readLine())!=null){
+                    listaCitas.add(linea);}
+                br.close();}
+
+            System.out.println("Carga de archivos completada.");
+
+        }catch(IOException e){
+            System.out.println("Error en carga de archivos, reintentar.");
+        }
+    }
+    public static void main(String[] args){
+        Scanner teclado=new Scanner(System.in);
+
+        System.out.println("Consultorio Simisimi");
+        boolean loginExitoso=false;
+
+        while (!loginExitoso) {
+            System.out.print("Usuario Administrador:  ");
+            String usuario=teclado.nextLine();
+            System.out.print("Contraseña: ");
+            String contrasena=teclado.nextLine();
+
+            if (usuario.equals("clinica") && contrasena.equals("123")) {
+                System.out.println("Acceso correcto.");
+                loginExitoso=true;
+            }else{
+                System.out.println("Acceso denegado. Ingrese nuevamente.");}
+        }
+
+        intentarCargarArchivos();
+
+        int opcion=0;
+        do {
+            try {
+                System.out.println("Ingrese opcion deseada:");
+                System.out.println("1. Alta doctor");
+                System.out.println("2. Alta paciente");
+                System.out.println("3. Crear cita");
+                System.out.println("4. Mostrar citas");
+                System.out.println("5. Guardar y salir");
+                System.out.print("========>>>>>>> Opcion: ");
+
+                opcion=Integer.parseInt(teclado.nextLine());
+
+                switch (opcion) {
+                    case 1: altaDoctor(teclado);
+                        break;
+                    case 2: altaPaciente(teclado);
+                        break;
+                    case 3: crearCita(teclado);
+                        break;
+                    case 4: mostrarCitas();
+                        break;
+                    case 5: System.out.println("Guardado exitoso. Hasta luego:)");
+                        guardarDatos();
+                        break;
+                    default:
+                        System.out.println("Opcion incorrecta, ingrese opcion del 1 al 5.");
+                }
+            } catch (NumberFormatException e){
+
+                System.out.println("Opcion incorrecta, ingrese solo numeracion");
+            }
+        }while (opcion != 5);}
+
+    public static void altaDoctor(Scanner teclado){
+        System.out.println("Registro doctores");
+        System.out.print("Define ID del doctor: ");
+        String id=teclado.nextLine();
+        System.out.print("Nombre: ");
+        String nombre=teclado.nextLine();
+        System.out.print("Especialidad: ");
+        String especialidad=teclado.nextLine();
+
+        String doctorCSV=id+", "+nombre+", "+especialidad;
+        listaDoctores.add(doctorCSV);
+        System.out.println("Doctor guardado");}
+
+    public static void altaPaciente(Scanner teclado){
+        System.out.println("Registro pacientes");
+        System.out.print("Define ID del paciente: ");
+        String id=teclado.nextLine();
+        System.out.print("Nombre completo: ");
+        String nombre=teclado.nextLine();
+
+        String pacienteCsv=id+","+nombre;
+        listaPacientes.add(pacienteCsv);
+        System.out.println("Paciente guardado");}
+
+    public static void crearCita(Scanner teclado){
+        System.out.println("Agendar cita");
+        System.out.print("Define ID de cita: ");
+        String idCita=teclado.nextLine();
+        System.out.print("Ingrese fecha y hora (formato dd/mm/aa + hora): ");
+        String fechaHora=teclado.nextLine();
+        System.out.print("Motivo de cita: ");
+        String motivo=teclado.nextLine();
+
+        System.out.print("Ingrese el ID del doctor: ");
+        String idDoctor=teclado.nextLine();
+        System.out.print("Ingrese el ID del paciente: ");
+        String idPaciente=teclado.nextLine();
+
+        String citaCsv=idCita+","+fechaHora+","+motivo+","+idDoctor+","+idPaciente;
+        listaCitas.add(citaCsv);
+        System.out.println("Cita agendada");}
+
+    public static void mostrarCitas() {
+        System.out.println("Citas agendidas");
+        if(listaCitas.isEmpty()){
+            System.out.println("No hay citas agendadas");
+            return;}
+
+        for (String cita:listaCitas){
+            String[] datos=cita.split(",");
+            System.out.println("ID Cita : "+datos[0]+" | Fecha: "+datos[1]+" | Motivo: "+datos[2]+" | ID Doc: "+datos[3]+" | ID Paciente: "+datos[4]);}
+        System.out.println();}
+
+    public static void guardarDatos() {
+        try {BufferedWriter bwDoc=new BufferedWriter(new FileWriter(ARCHIVO_DOCTORES));
+            for(String doc:listaDoctores){
+                bwDoc.write(doc);
+                bwDoc.newLine();}
+            bwDoc.close();
+
+            BufferedWriter bwPac=new BufferedWriter(new FileWriter(ARCHIVO_PACIENTES));
+            for (String pac:listaPacientes){
+                bwPac.write(pac);
+                bwPac.newLine();}
+            bwPac.close();
+
+            BufferedWriter bwCita=new BufferedWriter(new FileWriter(ARCHIVO_CITAS));
+            for(String cita:listaCitas){
+                bwCita.write(cita);
+                bwCita.newLine();}
+            bwCita.close();
+        }catch (IOException e){
+            System.out.println("Error, intentar nuevamente.");}
+    }
+
+    public static void cargarDatosPrevios() {
+        try {File fDoc=new File(ARCHIVO_DOCTORES);
+            if (fDoc.exists()){
+                BufferedReader br=new BufferedReader(new FileReader(fDoc));
+                String linea;
+                while ((linea = br.readLine())!=null){
+                    listaDoctores.add(linea);}
+                br.close();}
+
+            File fPac=new File(ARCHIVO_PACIENTES);
+            if(fPac.exists()){
+                BufferedReader br=new BufferedReader(new FileReader(fPac));
+                String linea;
+                while ((linea=br.readLine())!=null){
+                    listaPacientes.add(linea);}
+                br.close();}
+
+            File fCita=new File(ARCHIVO_CITAS);
+            if (fCita.exists()){
+                BufferedReader br=new BufferedReader(new FileReader(fCita));
+                String linea;
+                while((linea=br.readLine())!= null){
+                    listaCitas.add(linea);}
+                br.close();}
+        }catch(IOException e){
+            System.out.println("Error, cargar nuevamente.");}
+    }
+}
