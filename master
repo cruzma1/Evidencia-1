@@ -1,3 +1,13 @@
+/**
+ *
+ * @author manuelcruz
+ */
+
+/** USUARIO LOGIN
+ * Usuario administrador: clinica
+ * Contrase˜na: 123
+ */
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
