@@ -1,0 +1,11 @@
+public class Doctor extends Persona{
+    private String specialty;
+
+    public Doctor(String id, String nombreCompleto, String especialidad){
+        super(id, nombreCompleto);
+        this.specialty=especialidad;}
+    public String getEspecialidad(){
+        return specialty;}
+    public String toCSV(){
+        return id+","+nombreCompleto+","+specialty;}
+}
