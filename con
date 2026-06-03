@@ -219,6 +219,3 @@ public class EvidenciaFinal1{
             System.out.println("Error, cargar nuevamente.");}
     }
 }
-git checkout develop
-git add .
-git commit -m 
